@@ -10,6 +10,7 @@ tap.test("POST /tasks", async (t) => {
     completed: false,
   };
   const response = await server.post("/tasks").send(newTask);
+  console.log("POST /tasks response:", response.body); // Debugging log
   t.equal(response.status, 201);
   t.end();
 });
@@ -19,12 +20,14 @@ tap.test("POST /tasks with invalid data", async (t) => {
     title: "New Task",
   };
   const response = await server.post("/tasks").send(newTask);
+  console.log("POST /tasks with invalid data response:", response.body); // Debugging log
   t.equal(response.status, 400);
   t.end();
 });
 
 tap.test("GET /tasks", async (t) => {
   const response = await server.get("/tasks");
+  console.log("GET /tasks response:", response.body); // Debugging log
   t.equal(response.status, 200);
   t.hasOwnProp(response.body[0], "id");
   t.hasOwnProp(response.body[0], "title");
@@ -39,6 +42,7 @@ tap.test("GET /tasks", async (t) => {
 
 tap.test("GET /tasks/:id", async (t) => {
   const response = await server.get("/tasks/1");
+  console.log("GET /tasks/:id response:", response.body); // Debugging log
   t.equal(response.status, 200);
   const expectedTask = {
     id: 1,
@@ -52,6 +56,7 @@ tap.test("GET /tasks/:id", async (t) => {
 
 tap.test("GET /tasks/:id with invalid id", async (t) => {
   const response = await server.get("/tasks/999");
+  console.log("GET /tasks/:id with invalid id response:", response.body); // Debugging log
   t.equal(response.status, 404);
   t.end();
 });
@@ -63,6 +68,7 @@ tap.test("PUT /tasks/:id", async (t) => {
     completed: true,
   };
   const response = await server.put("/tasks/1").send(updatedTask);
+  console.log("PUT /tasks/:id response:", response.body); // Debugging log
   t.equal(response.status, 200);
   t.end();
 });
@@ -74,6 +80,7 @@ tap.test("PUT /tasks/:id with invalid id", async (t) => {
     completed: true,
   };
   const response = await server.put("/tasks/999").send(updatedTask);
+  console.log("PUT /tasks/:id with invalid id response:", response.body); // Debugging log
   t.equal(response.status, 404);
   t.end();
 });
@@ -85,18 +92,21 @@ tap.test("PUT /tasks/:id with invalid data", async (t) => {
     completed: "true",
   };
   const response = await server.put("/tasks/1").send(updatedTask);
+  console.log("PUT /tasks/:id with invalid data response:", response.body); // Debugging log
   t.equal(response.status, 400);
   t.end();
 });
 
 tap.test("DELETE /tasks/:id", async (t) => {
   const response = await server.delete("/tasks/1");
+  console.log("DELETE /tasks/:id response:", response.body); // Debugging log
   t.equal(response.status, 200);
   t.end();
 });
 
 tap.test("DELETE /tasks/:id with invalid id", async (t) => {
   const response = await server.delete("/tasks/999");
+  console.log("DELETE /tasks/:id with invalid id response:", response.body); // Debugging log
   t.equal(response.status, 404);
   t.end();
 });
