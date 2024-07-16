@@ -86,6 +86,10 @@ curl -X PUT http://localhost:3000/tasks/1 \
 
 curl -X DELETE http://localhost:3000/tasks/1
 
+# Retrieve Tasks Sorted by status
+
+curl -X GET "http://localhost:3000/tasks/status/completed or incomplete
+
 # Retrieve Tasks Sorted by Completion Status
 
 curl -X GET "http://localhost:3000/tasks/sortByStatus?status=true"
