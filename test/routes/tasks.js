@@ -60,6 +60,17 @@ router.get("/tasks/status/:status", (req, res) => {
   res.json(filteredTasks);
 });
 
+// GET /tasks/sortByStatus: Retrieve tasks sorted by completion status
+router.get("/tasks/sortByStatus", (req, res) => {
+  const { status } = req.query;
+  if (status !== "true" && status !== "false") {
+    return res.status(400).send("Invalid status value. Please use 'true' or 'false'.");
+  }
+  const sortedTasks = tasksArray.filter((task) => task.completed === (status === "true"));
+  res.json(sortedTasks);
+});
+
+
 // POST /tasks: Create a new task
 router.post("/tasks", (req, res) => {
   const { title, description, completed } = req.body;
