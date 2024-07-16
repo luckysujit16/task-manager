@@ -42,6 +42,24 @@ router.get("/tasks/:id", (req, res) => {
   res.json(task);
 });
 
+// GET /tasks/status/:status: Retrieve tasks by completion status
+router.get("/tasks/status/:status", (req, res) => {
+  const status = req.params.status.toLowerCase();
+  let filteredTasks;
+
+  if (status === "completed") {
+    filteredTasks = tasksArray.filter((task) => task.completed === true);
+  } else if (status === "incomplete") {
+    filteredTasks = tasksArray.filter((task) => task.completed === false);
+  } else {
+    return res
+      .status(400)
+      .send("Invalid status. Use 'completed' or 'incomplete'.");
+  }
+
+  res.json(filteredTasks);
+});
+
 // POST /tasks: Create a new task
 router.post("/tasks", (req, res) => {
   const { title, description, completed } = req.body;
