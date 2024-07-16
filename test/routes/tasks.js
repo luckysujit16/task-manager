@@ -19,6 +19,15 @@ function getTasksFromFile() {
 const tasksArray = getTasksFromFile().tasks;
 console.log("Tasks read from file:", getTasksFromFile().tasks);
 
+// Default route for invalid API endpoint requests
+router.get("/", (req, res) => {
+  res
+    .status(400)
+    .send(
+      "Please enter a proper API endpoint with a valid request method (GET, POST, PUT, DELETE, etc.)."
+    );
+});
+
 router.get("/tasks", (req, res) => {
   res.json(Tasks);
 });
