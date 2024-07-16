@@ -2,7 +2,7 @@
 const fs = require("node:fs");
 const express = require("express");
 const router = express.Router();
-const Tasks = require("../models/task");
+const Task = require("../models/task");
 
 // Add initial tasks from task.json here
 function getTasksFromFile() {
@@ -12,12 +12,12 @@ function getTasksFromFile() {
     return tasks;
   } catch (error) {
     console.error("Error reading task.json:", error.message);
-    return []; // Return an empty array if there's an error like file does not exist or is not a valid JSON
+    return { tasks: [] }; // Return an object with an empty tasks array if there's an error
   }
 }
 
 const tasksArray = getTasksFromFile().tasks;
-console.log("Tasks read from file:", getTasksFromFile().tasks);
+console.log("Tasks read from file:", tasksArray);
 
 // Default route for invalid API endpoint requests
 router.get("/", (req, res) => {
@@ -28,30 +28,39 @@ router.get("/", (req, res) => {
     );
 });
 
+// GET /tasks: Retrieve all tasks
 router.get("/tasks", (req, res) => {
-  res.json(Tasks);
+  res.json(tasksArray);
 });
 
+// GET /tasks/:id: Retrieve a single task by its ID
 router.get("/tasks/:id", (req, res) => {
-  const task = tasks.find((t) => t.id === parseInt(req.params.id));
+  const task = tasksArray.find((t) => t.id === parseInt(req.params.id));
   if (!task) {
     return res.status(404).send("Task not found");
   }
   res.json(task);
 });
 
+// POST /tasks: Create a new task
 router.post("/tasks", (req, res) => {
   const { title, description, completed } = req.body;
   if (!title || !description || typeof completed !== "boolean") {
     return res.status(400).send("Invalid task data");
   }
-  const newTask = new Task(tasks.length + 1, title, description, completed);
-  tasks.push(newTask);
+  const newTask = new Task(
+    tasksArray.length + 1,
+    title,
+    description,
+    completed
+  );
+  tasksArray.push(newTask);
   res.status(201).json(newTask);
 });
 
+// PUT /tasks/:id: Update an existing task by its ID
 router.put("/tasks/:id", (req, res) => {
-  const task = tasks.find((t) => t.id === parseInt(req.params.id));
+  const task = tasksArray.find((t) => t.id === parseInt(req.params.id));
   if (!task) {
     return res.status(404).send("Task not found");
   }
@@ -65,12 +74,15 @@ router.put("/tasks/:id", (req, res) => {
   res.json(task);
 });
 
+// DELETE /tasks/:id: Delete a task by its ID
 router.delete("/tasks/:id", (req, res) => {
-  const taskIndex = tasks.findIndex((t) => t.id === parseInt(req.params.id));
+  const taskIndex = tasksArray.findIndex(
+    (t) => t.id === parseInt(req.params.id)
+  );
   if (taskIndex === -1) {
     return res.status(404).send("Task not found");
   }
-  tasks.splice(taskIndex, 1);
+  tasksArray.splice(taskIndex, 1);
   res.status(200).send("Task deleted");
 });
 
