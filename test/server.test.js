@@ -8,6 +8,7 @@ tap.test("POST /tasks", async (t) => {
     title: "New Task",
     description: "New Task Description",
     completed: false,
+    priority: "medium"
   };
   const response = await server.post("/tasks").send(newTask);
   console.log("POST /tasks response:", response.body); // Debugging log
@@ -33,10 +34,12 @@ tap.test("GET /tasks", async (t) => {
   t.hasOwnProp(response.body[0], "title");
   t.hasOwnProp(response.body[0], "description");
   t.hasOwnProp(response.body[0], "completed");
+  t.hasOwnProp(response.body[0], "priority");
   t.type(response.body[0].id, "number");
   t.type(response.body[0].title, "string");
   t.type(response.body[0].description, "string");
   t.type(response.body[0].completed, "boolean");
+  t.type(response.body[0].priority, "string");
   t.end();
 });
 
@@ -49,6 +52,7 @@ tap.test("GET /tasks/:id", async (t) => {
     title: "Set up environment",
     description: "Install Node.js, npm, and git",
     completed: true,
+    priority: "high"
   };
   t.match(response.body, expectedTask);
   t.end();
@@ -66,6 +70,7 @@ tap.test("PUT /tasks/:id", async (t) => {
     title: "Updated Task",
     description: "Updated Task Description",
     completed: true,
+    priority: "low"
   };
   const response = await server.put("/tasks/1").send(updatedTask);
   console.log("PUT /tasks/:id response:", response.body); // Debugging log
@@ -78,6 +83,7 @@ tap.test("PUT /tasks/:id with invalid id", async (t) => {
     title: "Updated Task",
     description: "Updated Task Description",
     completed: true,
+    priority: "low"
   };
   const response = await server.put("/tasks/999").send(updatedTask);
   console.log("PUT /tasks/:id with invalid id response:", response.body); // Debugging log
@@ -90,6 +96,7 @@ tap.test("PUT /tasks/:id with invalid data", async (t) => {
     title: "Updated Task",
     description: "Updated Task Description",
     completed: "true",
+    priority: "low"
   };
   const response = await server.put("/tasks/1").send(updatedTask);
   console.log("PUT /tasks/:id with invalid data response:", response.body); // Debugging log
@@ -108,6 +115,14 @@ tap.test("DELETE /tasks/:id with invalid id", async (t) => {
   const response = await server.delete("/tasks/999");
   console.log("DELETE /tasks/:id with invalid id response:", response.body); // Debugging log
   t.equal(response.status, 404);
+  t.end();
+});
+
+tap.test("GET /tasks/priority/:level", async (t) => {
+  const response = await server.get("/tasks/priority/high");
+  console.log("GET /tasks/priority/high response:", response.body); // Debugging log
+  t.equal(response.status, 200);
+  t.ok(response.body.length > 0, "Should return tasks with high priority");
   t.end();
 });
 
