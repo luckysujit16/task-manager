@@ -131,8 +131,6 @@ Sujit Shankarrao Jadhav
 
 ### Official Email: sujit.jadhav@aaressinfomedia.com
 
-### Contact Number: 8433968509
-
 ### website: https://aaressinfomedia.com
 
 This `README.md` file provides comprehensive information about the project, including details on the endpoints, installation steps, and example API requests. This should make it easy for anyone to understand how to use and test the API.
